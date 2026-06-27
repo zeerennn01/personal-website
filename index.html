@@ -125,7 +125,7 @@
             background: var(--accent-purple);
         }
 
-        /* ── NAVIGATION BAR (from biodata.html) ── */
+        /* ── NAVIGATION BAR ── */
         .navbar {
             position: fixed;
             top: 0;
@@ -1296,6 +1296,30 @@
         .hero::before {
             /* already defined above */;
         }
+
+        /* ── Hero Clock ── */
+.hero-clock {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    background: rgba(10, 8, 20, 0.55);
+    padding: 0.35rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(103, 232, 249, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 0 20px rgba(103, 232, 249, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-clock:hover {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 25px rgba(167, 139, 250, 0.15);
+}
     </style>
 </head>
 <body>
@@ -1340,6 +1364,7 @@
             <div class="hero-particles" id="particles"></div>
 
             <div class="hero-content">
+                <div class="hero-clock" id="hero-clock">🕒 --:--:--</div>
                 <div class="hero-badge">
                     <span class="dot"></span>
                     Available for new opportunities
@@ -1557,6 +1582,28 @@
                 fadeElements.forEach(el => el.classList.add('visible'));
             }
         });
+    </script>
+
+    <script>
+        <!-- Kuala Lumpur Clock Update -->
+    function updateHeroClock() {
+        const clockEl = document.getElementById('hero-clock');
+        if (!clockEl) return;
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', {
+            timeZone: 'Asia/Kuala_Lumpur',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false   // Set to true if you want AM/PM
+        });
+        clockEl.textContent = '🕒 ' + timeStr;
+    }
+
+    <!-- Update immediately and then every second -->
+    updateHeroClock();
+    setInterval(updateHeroClock, 1000);
     </script>
 </body>
 </html>
