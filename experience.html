@@ -1,0 +1,616 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alex Morgan's professional experience and career journey." />
+  <title>Experience — Alex Morgan</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* ══════════════════════════════════
+       DESIGN TOKENS  (mirrors main.css)
+    ══════════════════════════════════ */
+    :root {
+      --bg-base:       #0a0814;
+      --bg-card:       rgba(255,255,255,0.04);
+      --glass-border:  rgba(255,255,255,0.08);
+      --glass-blur:    blur(16px);
+
+      --accent-purple: #a78bfa;
+      --accent-cyan:   #22d3ee;
+      --accent-pink:   #f472b6;
+      --accent-amber:  #fbbf24;
+      --accent-green:  #34d399;
+
+      --grad-main:     linear-gradient(135deg, #a78bfa, #22d3ee);
+      --grad-warm:     linear-gradient(135deg, #f59e0b, #ec4899);
+
+      --text-primary:  #f1f0f5;
+      --text-secondary:#9ca3af;
+
+      --font-heading:  'Segoe UI', system-ui, sans-serif;
+      --font-body:     'Segoe UI', system-ui, sans-serif;
+      --radius:        1rem;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Ambient orbs ── */
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(80px); opacity: 0.18;
+      pointer-events: none; z-index: 0;
+    }
+    .orb-1 { width:500px; height:500px; background:#7c3aed; top:-100px; left:-100px; }
+    .orb-2 { width:400px; height:400px; background:#0ea5e9; bottom:100px; right:-80px; }
+    .orb-3 { width:300px; height:300px; background:#ec4899; top:50%; left:50%; transform:translate(-50%,-50%); }
+
+    /* ── Page layout ── */
+    .page-wrap { position: relative; z-index: 1; }
+
+    .page-hero { text-align: center; padding: 5rem 2rem 3rem; }
+    .page-hero-tag {
+      display: inline-block;
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--accent-cyan);
+      background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25);
+      border-radius: 99px; padding: 0.35rem 1rem; margin-bottom: 1.25rem;
+    }
+    .page-hero h1 {
+      font-family: var(--font-heading); font-size: clamp(2.4rem,5vw,3.6rem);
+      font-weight: 900; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .page-hero p { color: var(--text-secondary); font-size: 1.1rem; }
+    .text-gradient { background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── Section ── */
+    .section { max-width: 1200px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+    .section-tag { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-purple); margin-bottom: 0.5rem; }
+    .section-title { font-family: var(--font-heading); font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 800; margin-bottom: 0.75rem; }
+    .section-title span { background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-divider { width: 60px; height: 3px; background: var(--grad-main); border-radius: 99px; margin-bottom: 2.5rem; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--glass-border);
+      border-radius: var(--radius); backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(167,139,250,0.35);
+      box-shadow: 0 12px 40px rgba(167,139,250,0.12);
+    }
+    .card-inner { padding: 1.75rem; height: 100%; }
+
+    /* ── Grids ── */
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    @media(max-width:900px){ .grid-3 { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:600px){ .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ── Fade-up ── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 2.5rem 2rem;
+      border-top: 1px solid var(--glass-border);
+      color: var(--text-secondary); font-size: 0.9rem;
+    }
+    .footer span { color: var(--accent-purple); font-weight: 600; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
+    .footer-links a:hover { color: var(--accent-cyan); }
+
+    /* ── Toast ── */
+    #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; }
+    .toast {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: rgba(20,16,40,0.95); border: 1px solid var(--glass-border);
+      border-radius: 0.75rem; padding: 1rem 1.25rem;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      min-width: 260px; max-width: 340px;
+      animation: toastIn .35s ease forwards;
+    }
+    .toast.hiding { animation: toastOut .3s ease forwards; }
+    .toast-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .toast-title { font-family: var(--font-heading); font-weight: 700; font-size: 0.9rem; margin-bottom: 0.15rem; }
+    .toast-msg { font-size: 0.8rem; color: var(--text-secondary); }
+    @keyframes toastIn  { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:none; } }
+    @keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateX(40px); } }
+
+    /* ══════════════════════════════════
+       PAGE-SPECIFIC STYLES
+    ══════════════════════════════════ */
+
+    .exp-intro { text-align:center; max-width:800px; margin:0 auto 3rem; font-size:1.1rem; color:var(--text-secondary); line-height:1.8; }
+
+    /* Timeline */
+    .timeline { position:relative; padding-left:2.5rem; }
+    .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(to bottom,#a78bfa,#22d3ee,transparent); border-radius:2px; }
+    .timeline-item { position:relative; margin-bottom:2.5rem; }
+    .timeline-dot {
+      position:absolute; left:-2.97rem; top:1.5rem;
+      width:14px; height:14px; border-radius:50%;
+      border:2px solid var(--accent-purple); background:var(--bg-base);
+      box-shadow:0 0 0 4px rgba(167,139,250,0.15);
+      transition:background .3s, box-shadow .3s;
+    }
+    .timeline-item:hover .timeline-dot { background:var(--accent-purple); box-shadow:0 0 0 6px rgba(167,139,250,0.2),0 0 16px var(--accent-purple); }
+
+    /* Exp card internals */
+    .exp-header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:0.75rem; }
+    .exp-header-left { display:flex; align-items:center; gap:1rem; flex:1; min-width:0; }
+    .exp-logo { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:1rem; font-weight:800; color:#fff; flex-shrink:0; }
+    .exp-meta { flex:1; min-width:0; }
+    .exp-role { font-family:var(--font-heading); font-size:1.15rem; font-weight:700; margin-bottom:0.2rem; }
+    .exp-company { font-size:0.9rem; font-weight:600; color:var(--accent-cyan); }
+    .exp-period { font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem; display:flex; align-items:center; gap:0.4rem; }
+    .exp-period::before { content:'📅'; font-size:0.75rem; }
+    .exp-badge { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:0.3rem 0.75rem; border-radius:99px; white-space:nowrap; flex-shrink:0; }
+    .badge-current { background:rgba(52,211,153,0.12); color:var(--accent-green); border:1px solid rgba(52,211,153,0.3); }
+    .badge-past    { background:rgba(156,163,175,0.1); color:var(--text-secondary); border:1px solid var(--glass-border); }
+    .exp-divider { width:100%; height:1px; background:var(--glass-border); margin:1rem 0; }
+    .exp-desc { font-size:0.9rem; color:var(--text-secondary); line-height:1.7; margin-bottom:1rem; }
+    .exp-achievements { list-style:none; }
+    .exp-achievements li { font-size:0.87rem; color:var(--text-primary); line-height:1.6; padding:0.35rem 0; display:flex; gap:0.6rem; }
+    .exp-achievements li::before { content:'›'; color:var(--accent-purple); font-weight:700; flex-shrink:0; }
+    .exp-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1.25rem; }
+    .exp-tag { font-size:0.75rem; font-weight:600; padding:0.25rem 0.65rem; border-radius:99px; background:rgba(167,139,250,0.1); color:var(--accent-purple); border:1px solid rgba(167,139,250,0.2); }
+
+    /* Quote banner */
+    .quote-banner { background:var(--grad-main); border-radius:var(--radius); padding:3rem 2rem; text-align:center; color:#0a0814; margin:4rem 0; position:relative; overflow:hidden; }
+    .quote-banner::before { content:'\201C'; position:absolute; top:-20px; left:20px; font-family:serif; font-size:12rem; color:rgba(0,0,0,0.1); line-height:1; }
+    .quote-text { font-family:var(--font-heading); font-size:clamp(1.4rem,3vw,1.9rem); font-weight:800; margin-bottom:1rem; position:relative; z-index:1; }
+    .quote-author { font-size:1rem; font-weight:600; position:relative; z-index:1; }
+
+        /* ── Skills Layout ── */
+    .skills-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 3rem;
+    }
+    .skill-item { margin-bottom: 1.5rem; }
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .skill-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .skill-pct {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-purple);
+    }
+    .skill-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--grad-main);
+      width: 0;
+      transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--grad-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+        transition: opacity var(--trans-fast);
+    }
+    .nav-logo:hover {
+        opacity: 0.85;
+    }
+
+    .nav-logo img {
+        width: 50px;           /* adjust to your preferred size */
+        height: 50px;          /* must equal width for a perfect circle */
+        border-radius: 50%;    /* makes it round */
+        object-fit: cover;     /* ensures the image fills the circle without distortion */
+        display: block;        /* removes extra inline spacing */
+    }
+
+    /* ── Map image tag ── */
+  .exp-map {
+    display: inline-block;
+    margin-top: 18px;                /* ← upper padding (spacing above) */
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;                      /* start hidden for animation */
+    animation: mapFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+  .exp-map:hover {
+    transform: scale(1.06) translateY(-6px);
+    filter: drop-shadow(0 12px 28px rgba(167, 139, 250, 0.35));
+  }
+  .exp-map img {
+    height: 250px;
+    width: auto;
+    border-radius: 6px;
+    display: block;
+    transition: border-radius 0.3s ease;
+  }
+  .exp-map:hover img {
+    border-radius: 12px;
+  }
+
+  @keyframes mapFadeUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+        <img src="Image/Logo.jpeg" alt="Home" />
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="biodata.html">Biodata</a></li>
+      <li><a class="nav-link active" href="experience.html">Experience</a></li>
+      <li><a class="nav-link" href="family.html">Family</a></li>
+      <li><a class="nav-link" href="education.html">Education</a></li>
+      <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+      <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
+      <li><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-hero">
+      <div class="page-hero-tag">Career Journey</div>
+      <h1>My <span class="text-gradient">Experience</span></h1>
+      <p>From public engagement to digital content creation — building skills, one role at a time.</p>
+    </div>
+
+    <div class="section" style="padding-top:1rem">
+
+      <p class="exp-intro fade-up">
+        My professional journey has been shaped by a blend of public engagement and administrative experience. From representing non-profit organizations as a Fundraising Specialist to contributing to digital communication initiatives during my internship at FELDA, I have developed strong communication, multimedia production, and organizational skills. Each role has taught me the value of adaptability, ethical practice, and meaningful collaboration.
+      </p>
+
+<!-- Timeline -->
+<p class="section-tag">Work History</p>
+<h2 class="section-title">Career <span>Timeline</span></h2>
+<div class="section-divider"></div>
+
+<div class="timeline">
+
+  <!-- Menara FELDA Internship -->
+  <div class="timeline-item fade-up">
+    <div class="timeline-dot"></div>
+    <div class="card"><div class="card-inner">
+      <div class="exp-header">
+        <div class="exp-header-left">
+          <div class="exp-logo" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)">FL</div>
+          <div class="exp-meta">
+            <div class="exp-role">Intern - Administration & Information Technology</div>
+            <div class="exp-company">Menara FELDA · Platinum Park, KLCC</div>
+            <div class="exp-period">9 Feb 2026 – 3 Apr 2026</div>
+          </div>
+        </div>
+        <span class="exp-badge badge-past">Past</span>
+      </div>
+      <div class="exp-divider"></div>
+      <p class="exp-desc">Completed an internship with the Administration and Information Technology Department, where I supported digital communication initiatives and administrative tasks. Contributed to the creation of multimedia content, promotional materials, and document management resources to enhance workplace productivity and internal communication.</p>
+      <ul class="exp-achievements">
+        <li>Produced an instructional video demonstrating how to effectively use Microsoft OneDrive, including file management, file sharing, and storage cleanup.</li>
+        <li>Edited and produced an Aidilfitri celebration video for the Administration and Information Technology Department to support internal engagement and communication.</li>
+        <li>Designed posters and promotional materials for departmental activities and announcements.</li>
+        <li>Assisted in organizing, updating, and managing data using Microsoft Excel to ensure accurate and well-maintained records.</li>
+        <li>Collaborated with department staff to develop digital content that aligned with the organization's communication objectives.</li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Microsoft OneDrive</span>
+        <span class="exp-tag">Microsoft Excel</span>
+        <span class="exp-tag">Microsoft Office</span>
+        <span class="exp-tag">Video Editing</span>
+        <span class="exp-tag">Poster Design</span>
+        <span class="exp-tag">Content Creation</span>
+        <span class="exp-tag">Digital Communication</span>
+        <span class="exp-tag">Multimedia Production</span>
+        <span class="exp-tag">Team Collaboration</span>
+      </div>
+
+      <span class="exp-map">
+        <a href="https://maps.app.goo.gl/X6HkNn371XWYFLmh6?g_st=iw" target="_blank" rel="noopener noreferrer">
+          <img src="Image/Map_1.png" alt="Location Map" />
+        </a>
+      </span>
+    </div></div>
+  </div>
+
+  <!-- OmniRaise Sdn. Bhd. -->
+  <div class="timeline-item fade-up">
+    <div class="timeline-dot"></div>
+    <div class="card"><div class="card-inner">
+      <div class="exp-header">
+        <div class="exp-header-left">
+          <div class="exp-logo" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)">OR</div>
+          <div class="exp-meta">
+            <div class="exp-role">Fundraising Specialist</div>
+            <div class="exp-company">OmniRaise Sdn. Bhd. · Kuala Lumpur, MY</div>
+            <div class="exp-period">Aug 2025 – Oct 2025</div>
+          </div>
+        </div>
+        <span class="exp-badge badge-past">Past</span>
+      </div>
+      <div class="exp-divider"></div>
+      <p class="exp-desc">Worked as a Fundraiser representing two leading non-profit organizations, the National Kidney Foundation (NKF) and Greenpeace Malaysia. Engaged with the public to raise awareness, encourage community support, and promote long-term donation programs while maintaining professional communication and ethical fundraising practices.</p>
+      <ul class="exp-achievements">
+        <li>Represented the National Kidney Foundation (NKF) and Greenpeace Malaysia in public fundraising campaigns.</li>
+        <li>Educated the public on healthcare, environmental sustainability and the importance of supporting charitable organizations.</li>
+        <li>Engaged with diverse audiences in shopping malls and other public venues to promote awareness and monthly donation programs.</li>
+        <li>Built positive relationships with potential donors through effective communication and professional customer engagement.</li>
+        <li>Maintained high ethical standards while representing both organizations and achieving fundraising objectives.</li>
+        <li>Promoted to <strong>Fundraising Specialist</strong> within one month for outstanding performance and consistently exceeding targets.</li>
+        <li>Achieved <strong>1st Place</strong> in the <strong>Top 10 Fundraisers</strong> ranking for the National Kidney Foundation (NKF) campaign with a <strong>100% performance rate</strong>.</li>
+        <li>Secured <strong>1st Place</strong> in the <strong>Top 10 Fundraisers</strong> ranking for the Greenpeace Malaysia campaign with a <strong>66.67% conversion rate</strong>.</li>
+        <li>Ranked among the <strong>Top 10 Fundraisers (Under 30 category)</strong>, demonstrating strong communication, leadership and public engagement skills.</li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Public Speaking</span>
+        <span class="exp-tag">Fundraising</span>
+        <span class="exp-tag">Communication</span>
+        <span class="exp-tag">Customer Engagement</span>
+        <span class="exp-tag">Persuasive Presentation</span>
+        <span class="exp-tag">Relationship Building</span>
+        <span class="exp-tag">Leadership</span>
+        <span class="exp-tag">Teamwork</span>
+        <span class="exp-tag">Public Relations</span>
+      </div>
+
+      <span class="exp-map">
+        <a href="https://maps.app.goo.gl/X6HkNn371XWYFLmh6?g_st=iw" target="_blank" rel="noopener noreferrer">
+          <img src="Image/Map_2.png" alt="Location Map" />
+        </a>
+      </span>
+    </div></div>
+  </div>
+
+</div><!-- /timeline -->
+
+    <!-- ══════════════════ SKILLS SECTION ══════════════════ -->
+    <section class="section" style="padding-top: 0;">
+      <div class="fade-up">
+        <div class="section-eyebrow">
+          <span class="section-tag" style="margin-bottom:0;">Technical Proficiency</span>
+          <span class="line"></span>
+        </div>
+        <h2 class="section-title" style="margin-bottom:0.5rem;">Skills &amp; <span>Expertise</span></h2>
+        <p class="section-subtitle" style="margin-bottom: 2.5rem;">
+          A curated overview of the technologies I work with daily — built through years of hands-on projects and continuous refinement.
+        </p>
+
+        <div class="card" style="padding: 2.25rem;">
+          <div class="card-inner">
+            <div class="skills-columns">
+              <!-- Left column -->
+              <div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">MS Excel</span>
+                    <span class="skill-pct">Basic</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="33"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">MS Word</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">MS PowerPoint</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">Canva Pro</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">Adobe Premiere Pro</span>
+                    <span class="skill-pct">Basic</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="33"></div></div>
+                </div>
+              </div>
+              <!-- Right column -->
+              <div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">HTML</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">CSS</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">JavaScript</span>
+                    <span class="skill-pct">Intermediate</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="66"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">C++</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+                <div class="skill-item">
+                  <div class="skill-header">
+                    <span class="skill-name">MySQL - PHPMyAdmin</span>
+                    <span class="skill-pct">Advanced</span>
+                  </div>
+                  <div class="skill-bar"><div class="skill-fill" data-level="100"></div></div>
+                </div>
+              </div>
+            </div><!-- /skills-columns -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+      <!-- Quote -->
+      <div class="quote-banner fade-up">
+        <p class="quote-text">The only way to do great work is to love what you do.</p>
+        <p class="quote-author">— Steve Jobs</p>
+      </div>
+
+    </div><!-- /section -->
+
+    <footer class="footer">
+      <p>Designed &amp; Built with ❤️ by <span>Azreen Farisya</span></p>
+      <p style="margin-top:0.5rem">© 2026 Azreen Farisya. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="biodata.html">Biodata</a>
+        <a href="education.html">Education</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </footer>
+  </div><!-- /page-wrap -->
+
+  <div id="toast-container"></div>
+
+  <script>
+    /* ── Fade-up on scroll ── */
+    const fadeObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => fadeObs.observe(el));
+
+    /* ── Toast ── */
+    function showToast(title, message, icon) {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerHTML = '<div class="toast-icon">' + icon + '</div><div><div class="toast-title">' + title + '</div><div class="toast-msg">' + message + '</div></div>';
+      tc.appendChild(t);
+      setTimeout(() => { t.classList.add('hiding'); setTimeout(() => t.remove(), 300); }, 4000);
+    }
+    setTimeout(() => showToast('Experience 💼', 'Explore my professional journey.', '👋'), 800);
+  </script>
+
+  <!-- Animate skill bars on scroll -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to animate all skill bars
+      function animateSkillBars() {
+        const skillFills = document.querySelectorAll('.skill-fill');
+        skillFills.forEach(function(fill) {
+          const level = fill.getAttribute('data-level');
+          if (level) {
+            fill.style.width = level + '%';
+          }
+        });
+      }
+
+      // Check if elements are visible using IntersectionObserver
+      const skillBars = document.querySelectorAll('.skill-item');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              // Find all skill-fills within this skill-item
+              const fills = entry.target.querySelectorAll('.skill-fill');
+              fills.forEach(function(fill) {
+                const level = fill.getAttribute('data-level');
+                if (level) {
+                  fill.style.width = level + '%';
+                }
+              });
+              // Unobserve after animating
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.2 });
+
+        skillBars.forEach(function(item) {
+          observer.observe(item);
+        });
+      } else {
+        // Fallback: animate immediately
+        animateSkillBars();
+      }
+    });
+  </script>
+
+  <script>
+        // Fallback to reveal fade-up elements without external main.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-up');
+
+            // If IntersectionObserver is supported, use it
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback: just show everything immediately
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+</body>
+</html>

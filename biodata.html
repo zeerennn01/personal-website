@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biodata — Alex Morgan</title>
+  <link rel="stylesheet" href="styles/main.css?v=2025" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Page-specific styles -->
+  <style>
+    /* ── Profile Hero Card ── */
+    .profile-hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      display: flex;
+      gap: 3rem;
+      align-items: center;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .profile-hero-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(167,139,250,0.07) 0%, rgba(103,232,249,0.04) 100%);
+      pointer-events: none;
+    }
+    .profile-hero-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(167,139,250,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Avatar ── */
+    .profile-avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .profile-avatar-ring {
+      position: relative;
+      display: inline-block;
+      border-radius: 50%;
+    }
+    .profile-avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      z-index: -1;
+      animation: spin 8s linear infinite;
+    }
+    .profile-avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      opacity: 0.15;
+      z-index: -2;
+      filter: blur(12px);
+    }
+    .profile-avatar-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa 0%, #67e8f9 50%, #f472b6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 900;
+      color: #0a0814;
+      border: 4px solid var(--bg-primary);
+      letter-spacing: -2px;
+      user-select: none;
+      overflow: hidden;
+    }
+    .profile-avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* crops the image cleanly without distortion */
+    display: block;
+}
+
+    /* Status dot */
+    .profile-avatar-status {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background: #34d399;
+      border-radius: 50%;
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 12px rgba(52,211,153,0.8);
+    }
+    .profile-avatar-status::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: rgba(52,211,153,0.4);
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50%       { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* ── Profile Info ── */
+    .profile-info { flex: 1; z-index: 1; }
+    .profile-info h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+    .profile-title {
+      font-size: 1rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .profile-title::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--accent-cyan);
+      border-radius: 1px;
+      display: inline-block;
+    }
+
+    .profile-meta-list {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 0.75rem 2rem;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+    }
+    .profile-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    .profile-meta-item svg {
+      flex-shrink: 0;
+      color: var(--accent-purple);
+    }
+
+    .profile-languages {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+    }
+    .profile-languages .lang-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-right: 0.25rem;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 0.875rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Personal Details Card ── */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+    .detail-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background var(--trans-fast);
+    }
+    .detail-row:hover { background: rgba(255,255,255,0.03); }
+    .detail-row:nth-last-child(-n+2) { border-bottom: none; }
+    .detail-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+    .detail-value {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .detail-value.accent { color: var(--accent-purple); }
+
+    /* ── About Me Prose ── */
+    .about-prose p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      margin-bottom: 1.25rem;
+    }
+    .about-prose p:last-child { margin-bottom: 0; }
+    .about-prose p strong { color: var(--accent-purple); font-weight: 600; }
+    .about-prose .highlight-line {
+      border-left: 3px solid var(--accent-cyan);
+      padding-left: 1rem;
+      color: var(--text-primary);
+      font-style: italic;
+    }
+
+    /* ── Interests ── */
+    .interests-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+    }
+    .interest-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      transition: all var(--trans);
+      cursor: default;
+    }
+    .interest-badge:hover {
+      background: rgba(167,139,250,0.12);
+      border-color: rgba(167,139,250,0.4);
+      color: var(--accent-purple);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(167,139,250,0.15);
+    }
+    .interest-badge svg { flex-shrink: 0; }
+
+    /* ── Section eyebrow ── */
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .section-eyebrow .line {
+      flex: 1;
+      height: 1px;
+      background: var(--glass-border);
+    }
+
+    /* ── Card heading ── */
+    .card-heading {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-heading svg { color: var(--accent-purple); }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .profile-hero-card { flex-direction: column; text-align: center; gap: 2rem; padding: 2rem 1.5rem; }
+      .profile-meta-list { grid-template-columns: 1fr; margin: 0 auto 1.5rem; }
+      .profile-languages { justify-content: center; }
+      .profile-actions { justify-content: center; }
+      .profile-title { justify-content: center; }
+      .skills-columns { grid-template-columns: 1fr; gap: 0; }
+      .details-grid { grid-template-columns: 1fr; }
+      .detail-row:nth-last-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .detail-row:last-child { border-bottom: none; }
+    }
+    @media (max-width: 480px) {
+      .profile-avatar-circle { width: 120px; height: 120px; font-size: 2.25rem; }
+    }
+
+    .nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--grad-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+        transition: opacity var(--trans-fast);
+    }
+    .nav-logo:hover {
+        opacity: 0.85;
+    }
+
+    .nav-logo img {
+        width: 50px;           /* adjust to your preferred size */
+        height: 50px;          /* must equal width for a perfect circle */
+        border-radius: 50%;    /* makes it round */
+        object-fit: cover;     /* ensures the image fills the circle without distortion */
+        display: block;        /* removes extra inline spacing */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- ══════════════════ NAVBAR ══════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo">
+        <img src="Image/Logo.jpeg" alt="Home" />
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link active" href="biodata.html">Biodata</a></li>
+      <li><a class="nav-link" href="experience.html">Experience</a></li>
+      <li><a class="nav-link" href="family.html">Family</a></li>
+      <li><a class="nav-link" href="education.html">Education</a></li>
+      <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+      <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
+      <li><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ══════════════════ PAGE WRAP ══════════════════ -->
+  <div class="page-wrap">
+
+    <!-- ── Page Hero ── -->
+    <header class="page-hero">
+      <div class="page-hero-tag">
+        <!-- Person icon -->
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Personal Profile
+      </div>
+      <h1>About <span class="text-gradient">Me</span></h1>
+      <p>A snapshot of who I am — my background, values, and the journey that shaped me today.</p>
+    </header>
+
+    <!-- ══════════════════ PROFILE SECTION ══════════════════ -->
+    <section class="section" style="padding-top:1rem;">
+
+      <!-- Profile Hero Card -->
+      <div class="profile-hero-card fade-up">
+
+        <!-- Avatar -->
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar-ring">
+            <div class="profile-avatar-circle" aria-label="Alex Morgan profile photo">
+                <img src="Image/Logo.jpeg" alt="Azreen Farisya" />
+            </div>
+          </div>
+          <div class="profile-avatar-status" title="Available for opportunities"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-info">
+          <h1>Azreen <span class="text-gradient">Farisya</span></h1>
+          <div class="profile-title">Diploma in Information Management</div>
+
+          <div class="profile-meta-list">
+            <div class="profile-meta-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              Bandar Country Home, Rawang, Selangor
+            </div>
+            <div class="profile-meta-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/>
+              </svg>
+              naharazreen@gmail.com
+            </div>
+            <div class="profile-meta-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.8 19.8 0 0 1 1.62 3.38 2 2 0 0 1 3.59 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 5.31 5.31l1.63-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              013-433 1235
+            </div>
+            <div class="profile-meta-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Open to Remote Work (WFH)
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div class="profile-languages">
+            <span class="lang-label">Languages:</span>
+            <span class="badge cyan">&#127474;&#127486; Bahasa Melayu</span>
+            <span class="badge">&#127482;&#127480; English</span>
+            <span class="badge pink">&#127464;&#127475; Mandarin</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="profile-actions">
+            <a
+              href="pdf/Resume.pdf"
+              download="Azreen_Farisya_Resume.pdf"
+              class="btn btn-primary"
+              onclick="Toast.show({type:'info', title:'Download Started', message:'Your resume is being prepared\u2026'});"
+              aria-label="Download resume"
+            >
+              <i class="fas fa-download"></i>
+              Download Resume
+            </a>
+            <button
+              class="btn btn-outline"
+              data-copy-email="naharazreen@gmail.com"
+              onclick="copyEmail(this)"
+              aria-label="Copy email address"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copy Email
+            </button>
+            <a href="contact.html" class="btn btn-outline" aria-label="Go to contact page">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              Contact Me
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /profile-hero-card -->
+
+      <!-- ── Two-column layout: Details + About ── -->
+      <div class="grid-2" style="align-items: start; gap: 2rem;">
+
+        <!-- Personal Details Card -->
+        <div class="card fade-up" style="padding: 0; overflow: hidden;">
+          <div class="card-inner">
+            <div style="padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--glass-border);">
+              <div class="card-heading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Personal Details
+              </div>
+            </div>
+            <div class="details-grid">
+              <div class="detail-row">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value">Azreen Farisya Binti Nahar Efairuz</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Place of Birth</span>
+                <span class="detail-value">Hospital Universiti Kebangsaan Malaysia (HUKM)</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Date of Birth</span>
+                <span class="detail-value">1 February 2005</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Nationality</span>
+                <span class="detail-value">Malaysian</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Religion</span>
+                <span class="detail-value">Islam</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Race</span>
+                <span class="detail-value">Malay</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Gender</span>
+                <span class="detail-value">Female</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Marital Status</span>
+                <span class="detail-value">Single</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Me Text -->
+        <div class="fade-up" style="animation-delay: 0.15s;">
+          <div class="section-eyebrow">
+            <span class="section-tag" style="margin-bottom:0;">About Me</span>
+            <span class="line"></span>
+          </div>
+          <div class="about-prose">
+            <p>
+              Hi and Assalammualaikum! I'm <strong>Azreen Farisya</strong>, a Diploma graduate in <strong>Information Management</strong> from Universiti Teknologi MARA (UiTM) Rembau Campus with a passion for creativity, communication and continuous learning. I enjoy exploring new ideas, solving problems and creating meaningful digital experiences that combine both functionality and creativity.
+            </p>
+            <p class="highlight-line">
+              "I believe every challenge is an opportunity to learn, grow, and become a better version of myself."
+            </p>
+            <p>
+              I am a determined individual who remains resilient when facing challenges and is always willing to step outside my comfort zone. My creativity allows me to develop fresh ideas, while my courage encourages me to take on new opportunities with confidence. I enjoy working collaboratively with others, learning new skills and adapting to different environments.
+            </p>
+            <p>
+              Outside of academics and work, I love travelling to discover new places, reading to broaden my knowledge and exploring the latest trends in technology and digital media. These interests inspire me to think creatively, stay curious and continuously improve both personally and professionally. As I continue my journey, I look forward to building meaningful experiences, expanding my knowledge and making a positive contribution wherever I go.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /grid-2 -->
+    </section>
+
+    <!-- ══════════════════ INTERESTS & HOBBIES ══════════════════ -->
+    <section class="section" style="padding-top: 0;">
+      <div class="fade-up">
+        <div class="section-eyebrow">
+          <span class="section-tag" style="margin-bottom:0;">Outside the Code</span>
+          <span class="line"></span>
+        </div>
+        <h2 class="section-title" style="margin-bottom:0.5rem;">Interests &amp; <span>Hobbies</span></h2>
+        <p class="section-subtitle" style="margin-bottom: 2.5rem;">
+          The pursuits that keep me balanced, inspired, and energised — because life is richer than any codebase.
+        </p>
+
+        <div class="interests-grid">
+          <span class="interest-badge">
+            <i class="fas fa-music"></i>
+            Music
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-utensils"></i>
+            Food Hunting
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-book-open"></i>
+            Reading
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-heart-pulse"></i>
+            Exercising
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-globe"></i>
+            Travel
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-birthday-cake"></i>
+            Baking
+          </span>
+          <span class="interest-badge">
+            <i class="fas fa-person-hiking"></i>
+            Hiking
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════ CTA BANNER ══════════════════ -->
+    <section class="section" style="padding-top: 0; padding-bottom: 5rem;">
+      <div class="fade-up">
+        <div class="card" style="background: linear-gradient(135deg, rgba(167,139,250,0.1) 0%, rgba(103,232,249,0.06) 100%); border-color: rgba(167,139,250,0.2); text-align: center; padding: 3.5rem 2rem;">
+          <div class="card-inner">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">&#128075;</div>
+            <h2 class="section-title" style="margin-bottom: 0.75rem;">Let's Build Something <span>Remarkable</span></h2>
+            <p class="section-subtitle" style="margin: 0 auto 2rem;">
+              Whether you have a project in mind, a role that fits, or just want to say hello — my inbox is always open.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <a href="contact.html" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Get In Touch
+              </a>
+              <a href="portfolio.html" class="btn btn-outline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+                View Portfolio
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page-wrap -->
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="footer">
+    <p>&#169; 2026 <span>Azreen Farisya</span>. Crafted with passion</p>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="index.html">Home</a>
+      <a href="biodata.html">Biodata</a>
+      <a href="experience.html">Experience</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </footer>
+
+  <!-- Load external main.js (Toast, etc.) -->
+  <script src="scripts/main.js"></script>
+
+  <!-- Fallback notification system -->
+  <script>
+    // Fallback notification system (if main.js Toast is not available)
+    if (typeof Toast === 'undefined') {
+      window.Toast = {
+        show: function(options) {
+          // Create toast container if it doesn't exist
+          let container = document.getElementById('toast-container');
+          if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = `
+              position: fixed;
+              bottom: 1.5rem;
+              right: 1.5rem;
+              z-index: 9999;
+              display: flex;
+              flex-direction: column;
+              gap: 0.75rem;
+              pointer-events: none;
+            `;
+            document.body.appendChild(container);
+          }
+
+          // Create toast element
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.style.cssText = `
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            background: rgba(18,15,36,0.95);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            min-width: 300px;
+            max-width: 380px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            pointer-events: all;
+            animation: toastIn 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+            position: relative;
+            overflow: hidden;
+          `;
+
+          // Add progress bar
+          const progress = document.createElement('div');
+          progress.style.cssText = `
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #a78bfa 0%, #67e8f9 100%);
+            border-radius: 0 0 16px 16px;
+            animation: toastProgress ${(options.duration || 4000) / 1000}s linear forwards;
+          `;
+          toast.appendChild(progress);
+
+          // Add color accent
+          const accent = document.createElement('div');
+          accent.style.cssText = `
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            border-radius: 2px 0 0 2px;
+            background: ${options.type === 'success' ? '#34d399' : options.type === 'error' ? '#f472b6' : options.type === 'welcome' ? '#a78bfa' : '#67e8f9'};
+          `;
+          toast.appendChild(accent);
+
+          // Icon
+          const icon = document.createElement('span');
+          icon.textContent = options.type === 'success' ? '✅' : options.type === 'error' ? '❌' : options.type === 'welcome' ? '👋' : 'ℹ️';
+          icon.style.cssText = `
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+          `;
+          toast.appendChild(icon);
+
+          // Body
+          const body = document.createElement('div');
+          body.style.cssText = `
+            flex: 1;
+          `;
+
+          const title = document.createElement('div');
+          title.textContent = options.title || '';
+          title.style.cssText = `
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f1f0f5;
+            margin-bottom: 0.2rem;
+          `;
+          body.appendChild(title);
+
+          const msg = document.createElement('div');
+          msg.textContent = options.message || '';
+          msg.style.cssText = `
+            font-size: 0.8rem;
+            color: #a8a6b8;
+            line-height: 1.5;
+          `;
+          body.appendChild(msg);
+
+          toast.appendChild(body);
+
+          // Close button
+          const close = document.createElement('button');
+          close.textContent = '✕';
+          close.style.cssText = `
+            background: transparent;
+            border: none;
+            color: #6b6880;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.15s ease;
+            flex-shrink: 0;
+          `;
+          close.onmouseover = () => close.style.color = '#f1f0f5';
+          close.onmouseout = () => close.style.color = '#6b6880';
+          close.onclick = () => {
+            toast.style.animation = 'toastOut 0.35s cubic-bezier(0.4,0,0.2,1) forwards';
+            setTimeout(() => toast.remove(), 400);
+          };
+          toast.appendChild(close);
+
+          // Add animations if not already defined
+          if (!document.getElementById('toast-animations')) {
+            const style = document.createElement('style');
+            style.id = 'toast-animations';
+            style.textContent = `
+              @keyframes toastIn {
+                from { opacity: 0; transform: translateX(100%); }
+                to { opacity: 1; transform: translateX(0); }
+              }
+              @keyframes toastOut {
+                from { opacity: 1; transform: translateX(0); }
+                to { opacity: 0; transform: translateX(110%); }
+              }
+              @keyframes toastProgress {
+                from { width: 100%; }
+                to { width: 0%; }
+              }
+            `;
+            document.head.appendChild(style);
+          }
+
+          container.appendChild(toast);
+
+          // Auto-dismiss
+          const duration = options.duration || 4000;
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.style.animation = 'toastOut 0.35s cubic-bezier(0.4,0,0.2,1) forwards';
+              setTimeout(() => toast.remove(), 400);
+            }
+          }, duration);
+        }
+      };
+    }
+  </script>
+
+  <!-- Copy email functions -->
+  <script>
+  function copyEmail(button) {
+    const email = button.getAttribute('data-copy-email');
+    if (!email) return;
+
+    // Save original button content
+    const originalHTML = button.innerHTML;
+    const originalClass = button.className;
+
+    function copySuccess() {
+      // Change button to show "Copied!" with green color
+      button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      button.className = 'btn btn-success'; // or you can use a custom class
+
+      // Also show the toast
+      Toast.show({
+        type: 'success',
+        title: 'Copied!',
+        message: `Email "${email}" copied to clipboard.`
+      });
+
+      // Revert after 2 seconds
+      setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.className = originalClass;
+      }, 2000);
+    }
+
+    function copyError() {
+      Toast.show({
+        type: 'error',
+        title: 'Copy failed',
+        message: 'Unable to copy. Please copy manually.'
+      });
+    }
+
+    // Try to copy
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email)
+        .then(copySuccess)
+        .catch(() => {
+          fallbackCopy(email, copySuccess, copyError);
+        });
+    } else {
+      fallbackCopy(email, copySuccess, copyError);
+    }
+  }
+
+    function fallbackCopy(text) {
+      const input = document.createElement('input');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      try {
+        document.execCommand('copy');
+        Toast.show({
+          type: 'success',
+          title: 'Copied!',
+          message: `Email "${text}" copied to clipboard.`
+        });
+      } catch (e) {
+        Toast.show({
+          type: 'error',
+          title: 'Copy failed',
+          message: 'Unable to copy. Please copy manually.'
+        });
+      }
+      document.body.removeChild(input);
+    }
+  </script>
+
+  <!-- Animate skill bars on scroll -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to animate all skill bars
+      function animateSkillBars() {
+        const skillFills = document.querySelectorAll('.skill-fill');
+        skillFills.forEach(function(fill) {
+          const level = fill.getAttribute('data-level');
+          if (level) {
+            fill.style.width = level + '%';
+          }
+        });
+      }
+
+      // Check if elements are visible using IntersectionObserver
+      const skillBars = document.querySelectorAll('.skill-item');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              // Find all skill-fills within this skill-item
+              const fills = entry.target.querySelectorAll('.skill-fill');
+              fills.forEach(function(fill) {
+                const level = fill.getAttribute('data-level');
+                if (level) {
+                  fill.style.width = level + '%';
+                }
+              });
+              // Unobserve after animating
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.2 });
+
+        skillBars.forEach(function(item) {
+          observer.observe(item);
+        });
+      } else {
+        // Fallback: animate immediately
+        animateSkillBars();
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        Toast.show({
+          type: 'welcome',
+          title: 'Welcome to my Biodata',
+          message: 'Get to know me a little better \u2014 feel free to download my resume!',
+          duration: 5000
+        });
+      }, 800);
+    });
+  </script>
+
+  <script>
+        // Fallback to reveal fade-up elements without external main.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-up');
+
+            // If IntersectionObserver is supported, use it
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback: just show everything immediately
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Alex Morgan to discuss opportunities, projects, or just to say hello." />
+  <title>Contact — Alex Morgan</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; margin-bottom: 4rem; }
+    @media(max-width:850px){.contact-grid{grid-template-columns: 1fr; gap: 2rem;}}
+
+    .contact-info-card { background: var(--bg-card); border-radius: var(--radius); padding: 2.5rem; border: 1px solid var(--glass-border); }
+    .contact-info-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+    .contact-info-item:last-child { margin-bottom: 0; }
+    .contact-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(167,139,250,0.15); color: var(--accent-purple); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .contact-text h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .contact-text p { font-size: 0.9rem; color: var(--text-secondary); }
+    .contact-text a { color: var(--text-primary); font-weight: 500; text-decoration: underline; text-decoration-color: var(--accent-purple); }
+
+    .social-links { display: flex; gap: 1rem; margin-top: 2rem; }
+    .social-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-primary); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; transition: all var(--trans); }
+    .social-btn:hover { background: var(--accent-purple); color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(167,139,250,0.4); }
+
+    .social-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   /* crops the image to fill the circle */
+      border-radius: 50%;  /* makes the image itself round */
+      display: block;
+    }
+
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .form-control { width: 100%; padding: 0.85rem 1rem; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem; transition: border-color var(--trans); }
+    .form-control:focus { outline: none; border-color: var(--accent-purple); box-shadow: 0 0 0 3px rgba(167,139,250,0.15); }
+    textarea.form-control { resize: vertical; min-height: 120px; }
+
+    .faq-item { margin-bottom: 1rem; }
+    .faq-summary { padding: 1rem 1.5rem; background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background var(--trans); }
+    .faq-summary:hover { background: var(--bg-card-hover); }
+    .faq-summary::after { content: '+'; font-size: 1.25rem; color: var(--accent-purple); transition: transform var(--trans); }
+    details[open] .faq-summary::after { transform: rotate(45deg); }
+    .faq-content { padding: 1rem 1.5rem; color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border); border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm); margin-top: -5px; }
+    .faq-content ul {
+        list-style: disc;           /* or 'circle', 'square' */
+        padding-left: 1.25rem;
+        margin: 0;
+    }
+    .faq-content ul li {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 0.5rem;
+    }
+    .faq-content ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--grad-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+        transition: opacity var(--trans-fast);
+    }
+    .nav-logo:hover {
+        opacity: 0.85;
+    }
+
+    .nav-logo img {
+        width: 50px;           /* adjust to your preferred size */
+        height: 50px;          /* must equal width for a perfect circle */
+        border-radius: 50%;    /* makes it round */
+        object-fit: cover;     /* ensures the image fills the circle without distortion */
+        display: block;        /* removes extra inline spacing */
+    }
+
+    /* ── Workflow / Process Steps ── */
+.workflow-box {
+    margin-top: 4rem;
+    padding: 2.5rem;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(6px);
+}
+
+.workflow-box .section-tag {
+    margin-top: 0;
+}
+
+.workflow-box p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.process-steps {
+    list-style: decimal;
+    padding-left: 1.5rem;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2.5rem;
+}
+
+.process-steps li {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    padding: 0.75rem 0 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.process-steps li::marker {
+    color: var(--accent-purple);
+    font-weight: 900;
+    font-size: 1.2rem;
+}
+
+.process-steps li strong {
+    color: var(--accent-cyan);
+    font-weight: 700;
+}
+
+/* Mobile: stack to single column */
+@media (max-width: 600px) {
+    .process-steps {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .workflow-box {
+        padding: 1.5rem;
+    }
+}
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+        <img src="Image/Logo.jpeg" alt="Home" />
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="biodata.html">Biodata</a></li>
+      <li><a class="nav-link" href="experience.html">Experience</a></li>
+      <li><a class="nav-link" href="family.html">Family</a></li>
+      <li><a class="nav-link" href="education.html">Education</a></li>
+      <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+      <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
+      <li><a class="nav-link active" href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-hero">
+      <div class="page-hero-tag">Get In Touch</div>
+      <h1>Contact <span class="text-gradient">Me</span></h1>
+      <p>Have a project in mind, or just want to say hello? Let's talk.</p>
+    </div>
+
+    <div class="section" style="padding-top:1rem">
+      <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="fade-up">
+          <div class="contact-info-card">
+            <h2 style="font-family: var(--font-heading); margin-bottom: 2rem;">Contact Information</h2>
+            
+            <div class="contact-info-item">
+              <div class="contact-icon">✉️</div>
+              <div class="contact-text">
+                <h3>Email</h3>
+                <p><a href="mailto:naharazreen@gmail.com">naharazreen@gmail.com</a></p>
+                <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.75rem; margin-top: 0.5rem;" data-copy-email="naharazreen@gmail.com">Copy Email</button>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-icon">📞</div>
+              <div class="contact-text">
+                <h3>Phone</h3>
+                <p>+60 13-433 1235</p>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-icon">📍</div>
+              <div class="contact-text">
+                <h3>Location</h3>
+                <p>Bandar Country Home, Rawang, Selangor</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+              <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;">Social Profiles</h3>
+              <div class="social-links">
+                <a href="https://wa.me/60134331235?text=Hi%20Azreen%2C%20Are%20you%20still%20taking%20slots%20to%20do%20projects%3F" target="_blank" rel="noopener noreferrer" class="social-btn">
+                  <img src="Image/Whatsapp_logo.png" alt="Whatsapp" />
+                </a>
+                <a href="https://www.instagram.com/zeerennn/" target="_blank" rel="noopener noreferrer" class="social-btn">
+                  <img src="Image/Instagram_logo.png" alt="Instagram" />
+                </a>
+                <a href="https://www.tiktok.com/@_hushhhhh" target="_blank" rel="noopener noreferrer" class="social-btn">
+                  <img src="Image/Tiktok_logo.jpg" alt="Tiktok" />
+                </a>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+              <span class="badge green">● Open to opportunities</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="fade-up">
+          <div class="card">
+            <div class="card-inner">
+              <h2 style="font-family: var(--font-heading); margin-bottom: 2rem;">Send Me a Message</h2>
+              <form id="contact-form">
+                <div class="form-group">
+                  <label class="form-label" for="name">Your Name</label>
+                  <input type="text" id="name" class="form-control" required placeholder="Azreen Farisya">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Your Email</label>
+                  <input type="email" id="email" class="form-control" required placeholder="naharazreen@gmail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="subject">Subject</label>
+                  <select id="subject" class="form-control" required>
+                    <option value="" disabled selected>Select a subject</option>
+                    <option value="job">Job Opportunity</option>
+                    <option value="freelance">Freelance Project</option>
+                    <option value="collab">Collaboration</option>
+                    <option value="other">Other / Just saying hi</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="message">Message</label>
+                  <textarea id="message" class="form-control" required placeholder="Tell me about your project..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <p class="section-tag" style="margin-top:4rem">Common Queries</p>
+      <h2 class="section-title">Frequently Asked <span>Questions</span></h2>
+      <div class="section-divider"></div>
+      
+      <div class="fade-up">
+        <details class="faq-item">
+          <summary class="faq-summary">Are you currently taking on new freelance projects?</summary>
+          <div class="faq-content">
+              <ul>
+                  <li>Yes! I currently have bandwidth for small to medium-sized freelance projects.</li>
+                  <li>For larger projects, please reach out so we can discuss timelines and availability.</li>
+              </ul>
+          </div>
+        </details>
+        
+        <details class="faq-item">
+          <summary class="faq-summary">What services do you offer?</summary>
+          <div class="faq-content">
+              <ul>
+                  <li>Full-stack web development (React, Node.js), UI/UX design implementation, performance optimization, and architectural consulting.</li>
+                  <li>I do not typically take on mobile-only or SEO-only projects.</li>
+              </ul>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-summary">How quickly do you respond to inquiries?</summary>
+          <div class="faq-content">
+              <ul>
+                  <li>I aim to respond to all emails and contact form submissions within 24 business hours.</li>
+                  <li>If your request is urgent, please mention that in the subject line.</li>
+              </ul>
+          </div>
+        </details>
+      </div>
+
+      <!-- ── WORKFLOW / PROCESS ── -->
+<div class="workflow-box fade-up">
+    <p class="section-tag">How It Works</p>
+    <h2 class="section-title">My <span>Workflow</span></h2>
+    <div class="section-divider"></div>
+    <p>Here's how I handle new project inquiries from start to finish — a simple, transparent 4‑step process:</p>
+
+    <ol class="process-steps">
+        <li>
+            <strong>Reach Out</strong> – Use the contact form above or email me directly with your project brief.
+        </li>
+        <li>
+            <strong>Discovery Chat</strong> – We schedule a quick 15–20 minute call to understand your vision, goals and requirements.
+        </li>
+        <li>
+            <strong>Proposal &amp; Agreement</strong> – I send a detailed scope of work, cost estimate and timeline for your approval.
+        </li>
+        <li>
+            <strong>Build &amp; Deliver</strong> – I develop your project with regular progress updates and deliver on schedule.
+        </li>
+    </ol>
+</div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Designed &amp; Built with ❤️ by <span>Azreen Farisya</span></p>
+      <p style="margin-top:0.5rem">© 2026 Azreen Farisya. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="scripts/main.js"></script>
+
+  <script>
+        // Fallback to reveal fade-up elements without external main.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-up');
+
+            // If IntersectionObserver is supported, use it
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback: just show everything immediately
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+</body>
+</html>

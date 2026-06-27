@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alex Morgan's family and loved ones." />
+  <title>Family — Alex Morgan</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .family-intro {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    .family-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+    .family-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 1.25rem;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 2rem; font-weight: 800; color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .family-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;  /* crops the image perfectly without distortion */
+      display: block;
+    }
+    .family-name { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .family-role { font-size: 0.85rem; color: var(--accent-purple); font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    .family-details { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .family-quote { font-style: italic; font-size: 0.9rem; color: var(--text-primary); }
+    .family-quote::before { content: '"'; }
+    .family-quote::after { content: '"'; }
+
+    .value-card { text-align: center; padding: 2rem; }
+    .value-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .value-title { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .value-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+
+    .quote-banner {
+      background: var(--grad-main);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #0a0814;
+      margin: 4rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-banner::before {
+      content: '"';
+      position: absolute;
+      top: -20px; left: 20px;
+      font-family: serif;
+      font-size: 12rem;
+      color: rgba(0,0,0,0.1);
+      line-height: 1;
+    }
+    .quote-text { font-family: var(--font-heading); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 1rem; position: relative; z-index: 1; }
+    .quote-author { font-size: 1rem; font-weight: 600; position: relative; z-index: 1; }
+
+    .fun-facts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .fact-card { text-align: center; padding: 2rem; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--glass-border); }
+    .fact-num { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 900; color: var(--accent-cyan); margin-bottom: 0.5rem; }
+    .fact-label { font-size: 0.9rem; font-weight: 500; }
+    @media(max-width:768px){.fun-facts-grid{grid-template-columns: 1fr;}}
+
+    .nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--grad-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+        transition: opacity var(--trans-fast);
+    }
+    .nav-logo:hover {
+        opacity: 0.85;
+    }
+
+    .nav-logo img {
+        width: 50px;           /* adjust to your preferred size */
+        height: 50px;          /* must equal width for a perfect circle */
+        border-radius: 50%;    /* makes it round */
+        object-fit: cover;     /* ensures the image fills the circle without distortion */
+        display: block;        /* removes extra inline spacing */
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+        <img src="Image/Logo.jpeg" alt="Home" />
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="biodata.html">Biodata</a></li>
+      <li><a class="nav-link" href="experience.html">Experience</a></li>
+      <li><a class="nav-link active" href="family.html">Family</a></li>
+      <li><a class="nav-link" href="education.html">Education</a></li>
+      <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+      <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
+      <li><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-hero">
+      <div class="page-hero-tag">My Loved Ones</div>
+      <h1>My <span class="text-gradient">Family</span></h1>
+      <p>The anchor that holds me, the sail that catches my wind.</p>
+    </div>
+
+    <div class="section" style="padding-top:1rem">
+      <p class="family-intro fade-up">Family is the compass that guides us. They are the inspiration to reach great heights, and our comfort when we occasionally falter. Here are the wonderful people who make my world complete and give meaning to everything I do.</p>
+
+      <div class="grid-3">
+        <!-- Father -->
+        <div class="card family-card fade-up">
+          <div class="card-inner">
+            <div class="family-avatar" style="background:linear-gradient(135deg, #f59e0b, #d97706)">
+              <img src="Image/father.jpeg" alt="Nahar Efairuz Bin Esa" />
+            </div>
+            <div class="family-name">Nahar Efairuz Bin Esa</div>
+            <div class="family-role">Father</div>
+            <div class="family-details">Military (Air force) · 52 yrs</div>
+            <p class="family-quote">My greatest inspiration and role model</p>
+          </div>
+        </div>
+        <!-- Mother -->
+        <div class="card family-card fade-up">
+          <div class="card-inner">
+            <div class="family-avatar" style="background:linear-gradient(135deg, #ec4899, #be185d)">
+              <img src="Image/mother.jpeg" alt="Aslita Binti Abas" />
+            </div>
+            <div class="family-name">Aslita Binti Abas</div>
+            <div class="family-role">Mother</div>
+            <div class="family-details">Electrical Engineering · 50 yrs</div>
+            <p class="family-quote">The warmest heart in the world</p>
+          </div>
+        </div>
+        <!-- Sister -->
+        <div class="card family-card fade-up">
+          <div class="card-inner">
+            <div class="family-avatar" style="background:linear-gradient(135deg, #10b981, #047857)">
+              <img src="Image/sister.jpeg" alt="Azeera Asyikin Binti Nahar Efairuz" />
+            </div>
+            <div class="family-name">Azeera Asyikin Binti Nahar Efairuz</div>
+            <div class="family-role">Sister</div>
+            <div class="family-details">Psychologist in Human Resource · 24 yrs</div>
+            <p class="family-quote">My coding buddy and forever bestie</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Family Values -->
+      <p class="section-tag" style="margin-top:4rem">Core Principles</p>
+      <h2 class="section-title">Family <span>Values</span></h2>
+      <div class="section-divider"></div>
+      <div class="grid-3">
+        <div class="card value-card fade-up">
+          <div class="card-inner">
+            <div class="value-icon">❤️</div>
+            <h3 class="value-title">Love &amp; Respect</h3>
+            <p class="value-desc">Treating each other with kindness, honoring our differences, and always leading with empathy in every interaction.</p>
+          </div>
+        </div>
+        <div class="card value-card fade-up">
+          <div class="card-inner">
+            <div class="value-icon">🤝</div>
+            <h3 class="value-title">Togetherness</h3>
+            <p class="value-desc">Being present for the big milestones and the small moments. Standing united through life's challenges and triumphs.</p>
+          </div>
+        </div>
+        <div class="card value-card fade-up">
+          <div class="card-inner">
+            <div class="value-icon">🌱</div>
+            <h3 class="value-title">Continuous Growth</h3>
+            <p class="value-desc">Encouraging one another to pursue passions, learn new things, and evolve into the best versions of ourselves.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div class="quote-banner fade-up">
+        <p class="quote-text">Family is not an important thing. It's everything.</p>
+        <p class="quote-author">— Michael J. Fox</p>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>Designed &amp; Built with ❤️ by <span>Azreen Farisya</span></p>
+      <p style="margin-top:0.5rem">© 2026 Azreen Farisya. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a><a href="biodata.html">Biodata</a><a href="education.html">Education</a><a href="contact.html">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="scripts/main.js"></script>
+  <script>
+    setTimeout(() => Toast.show({type:'welcome', title:'Family ❤️', message:'Meet the wonderful people in my life.'}), 800);
+  </script>
+
+  <script>
+        // Fallback to reveal fade-up elements without external main.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-up');
+
+            // If IntersectionObserver is supported, use it
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback: just show everything immediately
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+</body>
+</html>

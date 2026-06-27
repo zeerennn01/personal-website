@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alex Morgan's photo gallery." />
+  <title>Gallery — Alex Morgan</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+      background: transparent; border: 1px solid var(--glass-border); color: var(--text-secondary);
+      padding: 0.5rem 1.25rem; border-radius: var(--radius-pill); cursor: pointer; font-family: var(--font-body); font-weight: 500; font-size: 0.9rem; transition: all var(--trans);
+    }
+    .filter-btn:hover { background: var(--glass); color: var(--text-primary); }
+    .filter-btn.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); box-shadow: 0 0 15px rgba(167,139,250,0.4); }
+
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+    }
+    .gallery-item {
+      position: relative; overflow: hidden; border-radius: var(--radius); cursor: pointer; aspect-ratio: 4/3;
+    }
+    .gallery-item-inner {
+      width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: transform var(--trans); position: relative;
+    }
+    .gallery-item:hover .gallery-item-inner { transform: scale(1.05); }
+    .gallery-emoji { font-size: 4rem; z-index: 1; }
+    .gallery-overlay {
+      position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+      opacity: 0; transition: opacity var(--trans); z-index: 2; display: flex; align-items: flex-end; padding: 1.5rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption { color: #fff; font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; }
+    .gallery-badge { position: absolute; top: 1rem; right: 1rem; z-index: 2; font-size: 0.75rem; padding: 0.3rem 0.8rem; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); border-radius: var(--radius-pill); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+    /* Lightbox Styles */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity var(--trans); backdrop-filter: blur(10px);
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  max-height: 85vh;
+}
+
+.lightbox-content {
+  width: 100%;
+  height: auto;
+  max-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+#lb-image {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+.lightbox-caption {
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--trans);
+  z-index: 10000;
+}
+.lightbox-close:hover { opacity: 1; }
+
+.nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--grad-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+        cursor: pointer;
+        transition: opacity var(--trans-fast);
+    }
+    .nav-logo:hover {
+        opacity: 0.85;
+    }
+
+    .nav-logo img {
+        width: 50px;           /* adjust to your preferred size */
+        height: 50px;          /* must equal width for a perfect circle */
+        border-radius: 50%;    /* makes it round */
+        object-fit: cover;     /* ensures the image fills the circle without distortion */
+        display: block;        /* removes extra inline spacing */
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+        <img src="Image/Logo.jpeg" alt="Home" />
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a class="nav-link" href="index.html">Home</a></li>
+      <li><a class="nav-link" href="biodata.html">Biodata</a></li>
+      <li><a class="nav-link" href="experience.html">Experience</a></li>
+      <li><a class="nav-link" href="family.html">Family</a></li>
+      <li><a class="nav-link" href="education.html">Education</a></li>
+      <li><a class="nav-link active" href="gallery.html">Gallery</a></li>
+      <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
+      <li><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="page-hero">
+      <div class="page-hero-tag">Captured Moments</div>
+      <h1>My <span class="text-gradient">Gallery</span></h1>
+      <p>A visual diary of my adventures, work, and precious moments.</p>
+      <div style="margin-top: 1.5rem;"><span class="badge" id="photo-count">24 Photos</span></div>
+    </div>
+
+    <div class="section" style="padding-top:1rem">
+      <div class="filter-bar fade-up">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="travel">Travel</button>
+        <button class="filter-btn" data-filter="family">Family</button>
+        <button class="filter-btn" data-filter="work">Work</button>
+        <button class="filter-btn" data-filter="nature">Nature</button>
+        <button class="filter-btn" data-filter="events">Events</button>
+        <button class="filter-btn" data-filter="friends">Friends</button>
+      </div>
+
+      <div class="gallery-grid fade-up" id="gallery-grid">
+        <!-- Gallery Items generated via JS to keep HTML clean, or hardcoded -->
+        <div class="gallery-item" data-category="travel" data-caption="Phuket, Thailand">
+          <div class="gallery-badge">Travel</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Travel_1.jpeg" alt="Phuket" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Phuket, Thailand</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Picnic">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_1.jpeg" alt="Picnic" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Picnic</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Wedding">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_2.jpeg" alt="Wedding" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Wedding</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="nature" data-caption="Beach">
+          <div class="gallery-badge">Nature</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Nature_1.jpeg" alt="Beach" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Beach</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="family" data-caption="Hari Raya Aidil Fitri">
+          <div class="gallery-badge">Family</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Family_1.jpeg" alt="Hari Raya Aidil Fitri" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Hari Raya Aidil Fitri</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="events" data-caption="LIMA, Langkawi">
+          <div class="gallery-badge">Events</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Events_1.jpeg" alt="LIMA, Langkawi" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">LIMA, Langkawi</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="travel" data-caption="Yogyakarta, Indonesia">
+          <div class="gallery-badge">Travel</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Travel_2.jpeg" alt="Yogyakarta" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Yogyakarta, Indonesia</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Hangout">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_3.jpeg" alt="Hangout" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Hangout</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Having Fun">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_4.jpeg" alt="Having Fun" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Having Fun</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="work" data-caption="Taking attendance and usher">
+          <div class="gallery-badge">Work</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Work_1.jpeg" alt="Taking attendance and usher" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Taking attendance and usher</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="nature" data-caption="Zoo Negara">
+          <div class="gallery-badge">Nature</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Nature_2.jpeg" alt="Zoo Negara" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Zoo Negara</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="family" data-caption="With my father">
+          <div class="gallery-badge">Family</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Family_2.jpeg" alt="With my father" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">With my father</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="events" data-caption="Gegar Vaganza">
+          <div class="gallery-badge">Events</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Events_2.jpeg" alt="Gegar Vaganza" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Gegar Vaganza</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="travel" data-caption="Singapore">
+          <div class="gallery-badge">Travel</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Travel_3.jpeg" alt="Singapore" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Singapore</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Eat at genting highland">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_5.jpeg" alt="Eat at genting highland" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Eat at genting highland</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Photo Booth">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_6.jpeg" alt="Photo Booth" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Photo Booth</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="work" data-caption="Meeting">
+          <div class="gallery-badge">Work</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Work_2.jpeg" alt="Meeting" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Meeting</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="nature" data-caption="Jungle">
+          <div class="gallery-badge">Nature</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Nature_3.jpeg" alt="Jungle" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Jungle</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="family" data-caption="Family Day">
+          <div class="gallery-badge">Family</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Family_3.jpeg" alt="Family Day" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Family Day</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="work" data-caption="Decorate office">
+          <div class="gallery-badge">Work</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Work_3.jpeg" alt="Decorate office" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Decorate office</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="nature" data-caption="Hiking">
+          <div class="gallery-badge">Nature</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Nature_4.jpeg" alt="Hiking" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Hiking</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Fireworks">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_7.jpeg" alt="Fireworks" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Fireworks</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="KLCC">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_8.jpeg" alt="KLCC" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">KLCC</div></div>
+        </div>
+
+        <div class="gallery-item" data-category="friends" data-caption="Healing">
+          <div class="gallery-badge">Friends</div>
+          <div class="gallery-item-inner" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <img src="Image/Friends_9.jpeg" alt="Healing" />
+          </div>
+          <div class="gallery-overlay"><div class="gallery-caption">Healing</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Designed &amp; Built with ❤️ by <span>Azreen Farisya</span></p>
+      <p style="margin-top:0.5rem">© 2026 Azreen Farisya. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lb-close">✕</button>
+    <div class="lightbox-content-wrapper">
+      <div class="lightbox-content" id="lb-content">
+        <img id="lb-image" src="" alt="" />
+      </div>
+      <div class="lightbox-caption" id="lb-cap">Caption</div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="scripts/main.js"></script>
+
+  <script>
+    // Filter logic
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.gallery-item');
+    const photoCount = document.getElementById('photo-count');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        let count = 0;
+
+        items.forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = 'block';
+            count++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        
+        photoCount.textContent = count + ' Photo' + (count !== 1 ? 's' : '');
+        Toast.show({type:'info', title:'Filter Applied', message:`Showing ${filter} photos (${count}).`});
+      });
+    });
+
+    // Lightbox Logic for Images
+    const modal = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lb-image');
+    const lbCap = document.getElementById('lb-cap');
+    const closeBtn = document.getElementById('lb-close');
+
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        if (img) {
+          lbImage.src = img.src;
+          lbImage.alt = img.alt || 'Gallery image';
+        }
+        
+        const cap = item.dataset.caption || img?.alt || 'Gallery Image';
+        lbCap.textContent = cap;
+        
+        modal.classList.add('open');
+      });
+    });
+
+    closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', e => { 
+      if (e.target === modal || e.target === modal.querySelector('.lightbox-content')) {
+        modal.classList.remove('open');
+      }
+    });
+
+    setTimeout(() => Toast.show({type:'info', title:'Gallery 📸', message:'Click any photo to view it full size.'}), 800);
+  </script>
+
+  <script>
+        // Fallback to reveal fade-up elements without external main.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-up');
+
+            // If IntersectionObserver is supported, use it
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.15 });
+
+                fadeElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback: just show everything immediately
+                fadeElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+
+<!-- ─── AUDIO: Auto-play with sound (if allowed) ─── -->
+<audio id="gallery-audio" src="Audio/Gallery_1.MP3" loop></audio>
+
+<!-- Optional toggle button (for user control) -->
+<button id="audio-toggle" aria-label="Toggle audio">
+  <span class="icon">🔊</span> <span id="audio-status">Playing</span>
+</button>
+
+<script>
+  const audio = document.getElementById('gallery-audio');
+  const toggleBtn = document.getElementById('audio-toggle');
+  const statusSpan = document.getElementById('audio-status');
+
+  // Try to play with sound immediately
+  audio.play().then(() => {
+    // Success: audio is playing with sound
+    statusSpan.textContent = 'Playing';
+    toggleBtn.querySelector('.icon').textContent = '🔊';
+  }).catch((err) => {
+    // Autoplay blocked -> mute and wait for user interaction
+    audio.muted = true;
+    audio.play(); // now it will play muted (always allowed)
+    statusSpan.textContent = 'Muted (tap to unmute)';
+    toggleBtn.querySelector('.icon').textContent = '🔇';
+
+    // Unmute on any user interaction
+    const unlock = () => {
+      audio.muted = false;
+      audio.play();
+      statusSpan.textContent = 'Playing';
+      toggleBtn.querySelector('.icon').textContent = '🔊';
+      document.removeEventListener('click', unlock);
+      document.removeEventListener('touchstart', unlock);
+    };
+    document.addEventListener('click', unlock, { once: true });
+    document.addEventListener('touchstart', unlock, { once: true });
+  });
+
+  // Manual toggle (same as before)
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (audio.muted) {
+      audio.muted = false;
+      audio.play();
+      statusSpan.textContent = 'Playing';
+      toggleBtn.querySelector('.icon').textContent = '🔊';
+    } else {
+      audio.muted = true;
+      audio.pause();
+      statusSpan.textContent = 'Muted';
+      toggleBtn.querySelector('.icon').textContent = '🔇';
+    }
+  });
+</script>
+</body>
+</html>
